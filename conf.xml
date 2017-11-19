@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+        <property name="cacheConfiguration">
+            <list>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="testCache"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                </bean>
+            </list>
+        </property>
+
+        <!-- Explicitly configure TCP discovery SPI to use Consul based discovey. -->
+        <property name="discoverySpi">
+             <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+				<property name="ipFinder">
+					<bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.consul.TcpDiscoveryConsulIpFinder">
+						<property name="consulAddres" value="http://consul"/>
+						        <property name="discoverySpi">
+             <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+				<property name="ipFinder">
+					<bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.consul.TcpDiscoveryConsulIpFinder">
+						<property name="consulAddres" value="http://consul"/>
+						<property name="consulPort" value="8500"/>
+					</bean>
+				</property>
+			</bean>
+        </property>
+					</bean>
+				</property>
+			</bean>
+        </property>
+        
+        <!-- Basic IGFS configuration. -->
+        <property name="fileSystemConfiguration">
+            <list>
+                <bean class="org.apache.ignite.configuration.FileSystemConfiguration">
+                    <!-- Distinguished file system name. -->
+                    <property name="name" value="testFilesystem" /> 
+                </bean>
+            </list>    
+        </property>
+        
+    </bean>
+</beans>
